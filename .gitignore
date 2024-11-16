@@ -1,0 +1,5 @@
+.vscode
+**/__pycache__
+*.png
+**/brain_tumor_dataset
+*.zip
