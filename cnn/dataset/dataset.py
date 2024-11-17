@@ -1,9 +1,9 @@
-from torchvision import datasets, transforms
-from torch.utils.data import Dataset
-
 import os
-import requests
 import zipfile
+
+import requests
+from torch.utils.data import Dataset
+from torchvision import datasets, transforms
 
 
 def download_data(url: str, output_dir: str):

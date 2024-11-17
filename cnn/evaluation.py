@@ -1,6 +1,6 @@
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 import torch
+from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 from training import TrainingMetrics
 
 
@@ -49,9 +49,9 @@ if __name__ == "__main__":
     plot_learning_curves(metrics)
     plt.show()
 
-    from torch.utils.data import DataLoader
     from dataset import load_data
     from simplecnn import SimpleCNN
+    from torch.utils.data import DataLoader
 
     _, data = load_data()
     loader = DataLoader(data, batch_size=64)

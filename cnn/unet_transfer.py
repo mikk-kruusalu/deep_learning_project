@@ -1,5 +1,5 @@
-import torch.nn as nn
 import torch
+import torch.nn as nn
 
 
 class UnetTransfer(nn.Module):
@@ -49,8 +49,8 @@ class UnetTransfer(nn.Module):
 
 # test if the model architecture works
 if __name__ == "__main__":
-    from torch.utils.data import DataLoader
     from dataset import load_data
+    from torch.utils.data import DataLoader
 
     data, _ = load_data()
 

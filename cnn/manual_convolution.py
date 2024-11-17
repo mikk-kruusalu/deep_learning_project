@@ -1,6 +1,6 @@
+import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
-import matplotlib.pyplot as plt
 from dataset import load_data
 
 

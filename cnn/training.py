@@ -1,6 +1,7 @@
-from sklearn.metrics import f1_score
-import torch
 from dataclasses import dataclass, field
+
+import torch
+from sklearn.metrics import f1_score
 
 
 @dataclass
@@ -67,9 +68,9 @@ def train(model, criterion, optimizer, train_loader, test_loader, nepochs=60, de
 
 # test if the training loop works
 if __name__ == "__main__":
+    from dataset import load_data
     from simplecnn import SimpleCNN
     from torch.utils.data import DataLoader
-    from dataset import load_data
 
     train_data, test_data = load_data()
 
