@@ -1,0 +1,7 @@
+exp_name: cnn_test
+logger:
+  wandb: false
+hyperparams:
+  batch_size: 64
+  learning_rate: 5.0e-4
+  nepochs: 1

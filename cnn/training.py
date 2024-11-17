@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass, field
 
 import torch
@@ -12,7 +13,17 @@ class TrainingMetrics:
     test_f1s: list[float] = field(default_factory=list)
 
 
-def train(model, criterion, optimizer, train_loader, test_loader, nepochs=60, device="cpu"):
+def save_model(model, optimizer, file_path):
+    torch.save(
+        {
+            "model": model.state_dict(),
+            "optimizer": optimizer.state_dict(),
+        },
+        file_path,
+    )
+
+
+def train(model, criterion, optimizer, train_loader, test_loader, output_dir, nepochs=60, device="cpu"):
     model = model.to(device)
 
     metrics = TrainingMetrics()
@@ -57,7 +68,8 @@ def train(model, criterion, optimizer, train_loader, test_loader, nepochs=60, de
         metrics.test_losses.append(test_loss)
         metrics.test_f1s.append(test_f1)
 
-        if epoch % 5 == 0:
+        if (epoch + 1) % 5 == 0 or epoch == 0:
+            save_model(model, optimizer, os.path.join(output_dir, f"chk_{epoch}.pth"))
             print(
                 f"{epoch}: Test loss {metrics.test_losses[-1]:.4f}\t f1: {metrics.test_f1s[-1]:.3f} \t "
                 f"Train loss: {metrics.train_losses[-1]:.3f}\t f1: {metrics.train_f1s[-1]:.3f}"
