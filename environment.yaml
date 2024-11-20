@@ -18,4 +18,6 @@ dependencies:
   - black
   - flake8
   - flake8-pyproject
+  - pyyaml
+  - requests
 prefix: /home/mikk/miniconda3/envs/deep_learning_project

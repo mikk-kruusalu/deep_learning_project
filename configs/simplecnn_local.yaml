@@ -1,0 +1,9 @@
+exp_name: simplecnn_local3
+device: cuda
+model: simplecnn
+hyperparams:
+  batch_size: 64
+  learning_rate: 1.0e-4
+  nepochs: 60
+logger:
+  wandb: false

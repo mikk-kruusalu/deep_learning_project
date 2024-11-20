@@ -1,4 +1,6 @@
 exp_name: cnn_test
+device: cpu
+model: simplecnn
 logger:
   wandb: false
 hyperparams:
