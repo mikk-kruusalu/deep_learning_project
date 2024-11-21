@@ -57,7 +57,7 @@ class GRU(nn.Module):
     def forward(self, x):
         # x: [batches, sequence, features]
 
-        H = torch.zeros((x.shape[0], self.nhidden))
+        H = torch.zeros((x.shape[0], self.nhidden), device=x.device)
         for seq in x.permute(1, 0, 2):
             H = self.gru(H, seq)
 

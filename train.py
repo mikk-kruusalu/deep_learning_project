@@ -104,21 +104,22 @@ def train(
 
         metrics.test_losses.append(test_loss)
         metrics.test_f1s.append(test_f1)
-        if log_wandb:
-            wandb.log(
-                {"test_loss": test_loss, "test_f1": test_f1, "train_loss": train_loss, "train_f1": train_f1}
-            )
 
         if epoch % 10 == 0 or epoch == (nepochs - 1):
             save_model(model, optimizer, metrics, Path(output_dir) / f"chk_{epoch}.pth")
-            if log_wandb:
-                wandb.log(
+        if log_wandb:
+            log = {"test_loss": test_loss, "test_f1": test_f1, "train_loss": train_loss, "train_f1": train_f1}
+            if epoch % 10 == 0 or epoch == (nepochs - 1):
+                log.update(
                     {
                         "cm_epoch": epoch,
                         "train_cm": plot_confusion_matrix(train_loader, model, data_classes, device),
                         "test_cm": plot_confusion_matrix(test_loader, model, data_classes, device),
                     }
                 )
+
+            wandb.log(log)
+
         if epoch % 5 == 0 or epoch == (nepochs - 1):
             print(
                 f"{epoch}: Test loss {metrics.test_losses[-1]:.4f}\t f1: {metrics.test_f1s[-1]:.3f} \t "

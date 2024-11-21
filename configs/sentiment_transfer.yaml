@@ -1,0 +1,10 @@
+exp_name: sentiment_transfer
+device: cpu
+model: sentiment_transfer
+hyperparams:
+  batch_size: 128
+  learning_rate: 1.0e-4
+  nepochs: 60
+logger:
+  wandb: true
+  project: deep-learning-project-rnn

@@ -57,7 +57,7 @@ class ActivityDataset(Dataset):
         self.seq = torch.stack(arrays, dim=-1)
 
         y = np.genfromtxt(list(root_path.glob("y_*.txt"))[0])
-        self.y = torch.tensor(y-1, dtype=torch.long)
+        self.y = torch.tensor(y - 1, dtype=torch.long)
 
         self.classes = [
             "WALKING",

@@ -21,4 +21,4 @@ dependencies:
   - pyyaml
   - requests
   - wandb
-prefix: /home/mikk/miniconda3/envs/deep_learning_project
+  - transformers

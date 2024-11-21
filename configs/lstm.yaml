@@ -1,0 +1,12 @@
+exp_name: stacked_lstm
+device: cpu
+model: stacked_lstm
+hyperparams:
+  batch_size: 64
+  learning_rate: 1.0e-3
+  nepochs: 60
+  model:
+    nlayers: 2
+logger:
+  wandb: true
+  project: deep-learning-project-rnn
