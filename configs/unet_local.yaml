@@ -1,0 +1,9 @@
+exp_name: unet_local
+device: cuda
+model: unet
+logger:
+  wandb: false
+hyperparams:
+  batch_size: 64
+  learning_rate: 5.0e-4
+  nepochs: 70

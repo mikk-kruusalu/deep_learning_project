@@ -3,4 +3,4 @@
 *.png
 **/brain_tumor_dataset
 *.zip
-checkpoints
+checkpoints*

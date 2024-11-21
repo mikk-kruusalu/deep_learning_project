@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import torch
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
-from train import TrainingMetrics, models
+from train import TrainingMetrics, load_model
 import argparse
 from pathlib import Path
 from dataset import load_data
@@ -24,7 +24,7 @@ def plot_learning_curves(metrics: TrainingMetrics):
 
 
 def plot_confusion_matrix(loader, model, classes, device="cpu", ax=None, **fig_kw):
-    # model.eval()
+    model.eval()
     test_pred = []
     test_labels = []
     for img, label in loader:
@@ -58,12 +58,7 @@ if __name__ == "__main__":
     args = parse_args()
     file = Path(args.file)
 
-    d = torch.load(file, weights_only=False)
-    model = models[args.model]()
-    model.load_state_dict(d["model"])
-    print(model)
-    metrics = TrainingMetrics(**d["metrics"])
-    print(metrics)
+    model, _, metrics = load_model(args.model, file)
 
     plot_learning_curves(metrics)
     plt.savefig(file.parent / f"{file.stem}_learning_curves.png")

@@ -31,6 +31,20 @@ def save_model(model, optimizer, metrics, file_path):
     )
 
 
+def load_model(model_name: str, file_path: Path):
+    d = torch.load(file_path, weights_only=False)
+
+    model = models[model_name]()
+    model.load_state_dict(d["model"])
+
+    optimizer = torch.optim.Adam(model.parameters())
+    optimizer.load_state_dict(d["optimizer"])
+
+    metrics = TrainingMetrics(**d["metrics"])
+
+    return model, optimizer, metrics
+
+
 def train(model, criterion, optimizer, train_loader, test_loader, output_dir, nepochs=60, device="cpu"):
     model = model.to(device)
 
@@ -42,17 +56,18 @@ def train(model, criterion, optimizer, train_loader, test_loader, output_dir, ne
         for img, labels in train_loader:
             img = img.to(device)
             labels = labels.to(device)
-            pred = model(img)
-
-            loss = criterion(pred, labels)
 
             optimizer.zero_grad()
+
+            pred = model(img)
+            loss = criterion(pred, labels)
             loss.backward()
+
             optimizer.step()
 
-            train_loss += loss.cpu().detach() / len(train_loader)
+            train_loss += loss.item() / len(train_loader)
             train_f1 += f1_score(
-                labels.cpu().detach(), torch.argmax(pred.cpu().detach(), dim=-1), average="weighted"
+                labels.item(), torch.argmax(pred.item(), dim=-1), average="weighted"
             ) / len(train_loader)
 
         metrics.train_losses.append(train_loss)
@@ -68,9 +83,9 @@ def train(model, criterion, optimizer, train_loader, test_loader, output_dir, ne
 
             loss = criterion(pred, labels)
 
-            test_loss += loss.cpu().detach() / len(test_loader)
+            test_loss += loss.item() / len(test_loader)
             test_f1 += f1_score(
-                labels.cpu().detach(), torch.argmax(pred.cpu().detach(), dim=-1), average="weighted"
+                labels.item(), torch.argmax(pred.item(), dim=-1), average="weighted"
             ) / len(test_loader)
 
         metrics.test_losses.append(test_loss)
