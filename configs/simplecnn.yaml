@@ -1,0 +1,12 @@
+exp_name: simplecnn3
+device: cuda
+model: simplecnn
+hyperparams:
+  batch_size: 32
+  learning_rate: 1.0e-4
+  nepochs: 60
+  model:
+    dropout: 0.5
+logger:
+  wandb: true
+  project: deep-learning-project-cnn

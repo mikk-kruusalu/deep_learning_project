@@ -165,7 +165,10 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_data, batch_size=hyperparams["batch_size"])
     test_loader = DataLoader(test_data, batch_size=hyperparams["batch_size"])
 
-    model = models[config["model"]]()
+    if "model" in hyperparams.keys():
+        model = models[config["model"]](**hyperparams["model"])
+    else:
+        model = models[config["model"]]()
 
     optimizer = torch.optim.Adam(model.parameters(), lr=hyperparams["learning_rate"])
     criterion = torch.nn.CrossEntropyLoss()

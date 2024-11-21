@@ -3,7 +3,7 @@ import torch.nn as nn
 
 
 class UnetTransfer(nn.Module):
-    def __init__(self, inchannels=1, output_size=4):
+    def __init__(self, inchannels=1, output_size=4, dropout=0.5):
         super(UnetTransfer, self).__init__()
 
         self.unet = torch.hub.load(
@@ -22,10 +22,13 @@ class UnetTransfer(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Conv2d(512, 256, kernel_size=8),
+            nn.BatchNorm2d(256),
             nn.Flatten(start_dim=-3),
             nn.SELU(),
+            nn.Dropout(p=dropout),
             nn.Linear(256, 128),
             nn.SELU(),
+            nn.Dropout(p=dropout),
             nn.Linear(128, output_size),
             nn.Softmax(dim=-1),
         )
