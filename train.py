@@ -3,16 +3,19 @@ from pathlib import Path
 from dataclasses import dataclass, field, asdict
 import torch
 import yaml
-from dataset import load_data
 from torch.utils.data import DataLoader
-from simplecnn import SimpleCNN
-from unet_transfer import UnetTransfer
 from sklearn.metrics import f1_score
+
+from cnn import SimpleCNN, UnetTransfer
+from rnn import GRU, StackedLSTM, SentimentTransfer
 
 
 models = {
     "simplecnn": SimpleCNN,
     "unet": UnetTransfer,
+    "gru": GRU,
+    "stacked_lstm": StackedLSTM,
+    "sentiment_transfer": SentimentTransfer,
 }
 
 
@@ -32,7 +35,7 @@ def save_model(model, optimizer, metrics, file_path):
 
 
 def load_model(model_name: str, file_path: Path):
-    d = torch.load(file_path, weights_only=False)
+    d = torch.load(file_path, weights_only=False, map_location="cpu")
 
     model = models[model_name]()
     model.load_state_dict(d["model"])
@@ -160,6 +163,11 @@ if __name__ == "__main__":
         from evaluate import plot_confusion_matrix
 
         init_run(config)
+
+    if config["model"] in ["unet", "simplecnn"]:
+        from cnn.dataset import load_data
+    else:
+        from rnn.dataset import load_data
 
     train_data, test_data = load_data()
     train_loader = DataLoader(train_data, batch_size=hyperparams["batch_size"])

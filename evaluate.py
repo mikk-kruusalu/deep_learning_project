@@ -4,7 +4,6 @@ from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 from train import TrainingMetrics, load_model
 import argparse
 from pathlib import Path
-from dataset import load_data
 from torch.utils.data import DataLoader
 
 
@@ -64,6 +63,11 @@ if __name__ == "__main__":
 
     plot_learning_curves(metrics)
     plt.savefig(file.parent / f"{file.stem}_learning_curves.png")
+
+    if args.model in ["unet", "simplecnn"]:
+        from cnn.dataset import load_data
+    else:
+        from rnn.dataset import load_data
 
     _, test_data = load_data()
     test_loader = DataLoader(test_data, batch_size=args.batch_size)
