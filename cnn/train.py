@@ -67,7 +67,7 @@ def train(model, criterion, optimizer, train_loader, test_loader, output_dir, ne
 
             train_loss += loss.item() / len(train_loader)
             train_f1 += f1_score(
-                labels.item(), torch.argmax(pred.item(), dim=-1), average="weighted"
+                labels.detach().cpu(), torch.argmax(pred.detach().cpu(), dim=-1), average="weighted"
             ) / len(train_loader)
 
         metrics.train_losses.append(train_loss)
@@ -85,7 +85,7 @@ def train(model, criterion, optimizer, train_loader, test_loader, output_dir, ne
 
             test_loss += loss.item() / len(test_loader)
             test_f1 += f1_score(
-                labels.item(), torch.argmax(pred.item(), dim=-1), average="weighted"
+                labels.detach().cpu(), torch.argmax(pred.detach().cpu(), dim=-1), average="weighted"
             ) / len(test_loader)
 
         metrics.test_losses.append(test_loss)
