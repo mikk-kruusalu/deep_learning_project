@@ -45,7 +45,18 @@ def load_model(model_name: str, file_path: Path):
     return model, optimizer, metrics
 
 
-def train(model, criterion, optimizer, train_loader, test_loader, output_dir, nepochs=60, device="cpu"):
+def train(
+    model,
+    criterion,
+    optimizer,
+    train_loader,
+    test_loader,
+    output_dir,
+    nepochs=60,
+    device="cpu",
+    log_wandb=False,
+    data_classes=None,
+):
     model = model.to(device)
 
     metrics = TrainingMetrics()
@@ -90,14 +101,29 @@ def train(model, criterion, optimizer, train_loader, test_loader, output_dir, ne
 
         metrics.test_losses.append(test_loss)
         metrics.test_f1s.append(test_f1)
+        if log_wandb:
+            wandb.log(
+                {"test_loss": test_loss, "test_f1": test_f1, "train_loss": train_loss, "train_f1": train_f1}
+            )
 
-        if epoch % 10 == 0 or epoch == nepochs:
+        if epoch % 10 == 0 or epoch == (nepochs - 1):
             save_model(model, optimizer, metrics, Path(output_dir) / f"chk_{epoch}.pth")
-        if epoch % 5 == 0:
+            if log_wandb:
+                wandb.log(
+                    {
+                        "cm_epoch": epoch,
+                        "train_cm": plot_confusion_matrix(train_loader, model, data_classes, device),
+                        "test_cm": plot_confusion_matrix(test_loader, model, data_classes, device),
+                    }
+                )
+        if epoch % 5 == 0 or epoch == (nepochs - 1):
             print(
                 f"{epoch}: Test loss {metrics.test_losses[-1]:.4f}\t f1: {metrics.test_f1s[-1]:.3f} \t "
                 f"Train loss: {metrics.train_losses[-1]:.3f}\t f1: {metrics.train_f1s[-1]:.3f}"
             )
+
+    if log_wandb:
+        wandb.finish()
 
     return model, metrics
 
@@ -112,6 +138,10 @@ def parse_args():
     return args
 
 
+def init_run(config):
+    wandb.init(project=config["logger"]["project"], name=config["exp_name"], config=config["hyperparams"])
+
+
 if __name__ == "__main__":
     args = parse_args()
 
@@ -124,6 +154,12 @@ if __name__ == "__main__":
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     with open(checkpoint_dir / Path(args.config).name, "w") as f:
         yaml.dump(config, f)
+
+    if config["logger"]["wandb"]:
+        import wandb
+        from evaluate import plot_confusion_matrix
+
+        init_run(config)
 
     train_data, test_data = load_data()
     train_loader = DataLoader(train_data, batch_size=hyperparams["batch_size"])
@@ -143,4 +179,6 @@ if __name__ == "__main__":
         checkpoint_dir,
         hyperparams["nepochs"],
         config["device"],
+        config["logger"]["wandb"],
+        train_data.classes,
     )

@@ -1,0 +1,10 @@
+exp_name: simplecnn_wandb_test
+device: cpu
+model: simplecnn
+hyperparams:
+  batch_size: 64
+  learning_rate: 1.0e-5
+  nepochs: 1
+logger:
+  wandb: true
+  project: deep-learning-project-cnn
