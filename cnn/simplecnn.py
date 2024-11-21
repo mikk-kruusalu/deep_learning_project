@@ -3,20 +3,23 @@ import torch.nn.functional as F
 
 
 class SimpleCNN(nn.Module):
-    def __init__(self, inchannels=1, output_size=4):
+    def __init__(self, inchannels=1, output_size=4, dropout=0.5):
         super(SimpleCNN, self).__init__()
 
         self.conv1 = nn.Sequential(
             nn.Conv2d(inchannels, 32, kernel_size=3),
+            nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2),
             nn.Conv2d(32, 64, kernel_size=5),
+            nn.BatchNorm2d(64),
             nn.ReLU(),
         )
 
         self.SEBlock1 = nn.Sequential(
             nn.AvgPool2d(59, 59, padding=0),
             nn.Flatten(start_dim=-3),
+            nn.Dropout(p=dropout),
             nn.Linear(64, 32),
             nn.ReLU(),
             nn.Linear(32, 64),
@@ -30,9 +33,11 @@ class SimpleCNN(nn.Module):
 
         self.final = nn.Sequential(
             nn.MaxPool2d(4, 4),
-            nn.Conv2d(128, 128, 5, 2),
+            nn.Conv2d(128, 256, 5, 2),
+            nn.BatchNorm2d(256),
             nn.ReLU(),
             nn.Flatten(start_dim=-3),
+            nn.Dropout(p=dropout),
             nn.LazyLinear(1024),
             nn.ReLU(),
             nn.Linear(1024, output_size),

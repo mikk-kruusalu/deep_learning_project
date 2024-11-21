@@ -42,6 +42,8 @@ def plot_confusion_matrix(loader, model, classes, device="cpu", ax=None, **fig_k
         fig, ax = plt.subplots(constrained_layout=True, **fig_kw)
     cm_display.plot(xticks_rotation=45, ax=ax)
 
+    return fig
+
 
 def parse_args():
     parser = argparse.ArgumentParser()

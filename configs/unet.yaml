@@ -1,0 +1,10 @@
+exp_name: unet
+device: cuda
+model: unet
+hyperparams:
+  batch_size: 64
+  learning_rate: 1.0e-5
+  nepochs: 60
+logger:
+  wandb: true
+  project: deep-learning-project-cnn
