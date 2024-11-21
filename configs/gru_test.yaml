@@ -1,0 +1,12 @@
+exp_name: gru_test
+device: cpu
+model: gru
+hyperparams:
+  batch_size: 64
+  learning_rate: 1.0e-5
+  nepochs: 1
+  model:
+    dropout: 0.2
+logger:
+  wandb: false
+  project: deep-learning-project-rnn

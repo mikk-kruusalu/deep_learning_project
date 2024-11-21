@@ -49,24 +49,33 @@ class ActivityDataset(Dataset):
         self.labels = []
         for f in root_path.glob("Inertial Signals/body*.txt"):
             array = np.genfromtxt(f)
-            arrays.append(torch.tensor(array))
+            arrays.append(torch.tensor(array, dtype=torch.float))
 
             label = "_".join(f.stem.split("_")[1:3])
             self.labels.append(label)
 
-        self.data = torch.stack(arrays, dim=-1)
+        self.seq = torch.stack(arrays, dim=-1)
 
         y = np.genfromtxt(list(root_path.glob("y_*.txt"))[0])
-        self.y = torch.tensor(y)
+        self.y = torch.tensor(y-1, dtype=torch.long)
+
+        self.classes = [
+            "WALKING",
+            "WALKING_UPSTAIRS",
+            "WALKING_DOWNSTAIRS",
+            "SITTING",
+            "STANDING",
+            "LAYING",
+        ]
 
     def __len__(self):
         return self.y.shape[0]
 
     def __getitem__(self, i):
-        return self.data[i], self.y[i]
+        return self.seq[i], self.y[i]
 
     def __getitems__(self, idx):
-        return self.data[idx], self.y[idx]
+        return [(seq, y) for seq, y in zip(self.seq[idx], self.y[idx])]
 
 
 # We convert images to standard size of 128x128 pixels.

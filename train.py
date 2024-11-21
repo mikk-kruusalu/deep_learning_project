@@ -154,7 +154,7 @@ if __name__ == "__main__":
 
     # save config file alongside with the model checkpoints
     checkpoint_dir = Path(args.output_dir) / config["exp_name"]
-    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint_dir.mkdir(parents=True)
     with open(checkpoint_dir / Path(args.config).name, "w") as f:
         yaml.dump(config, f)
 
