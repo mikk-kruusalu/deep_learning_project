@@ -91,14 +91,13 @@ def train(model, criterion, optimizer, train_loader, test_loader, output_dir, ne
         metrics.test_losses.append(test_loss)
         metrics.test_f1s.append(test_f1)
 
-        if epoch % 5 == 0:
+        if epoch % 10 == 0 or epoch == nepochs:
             save_model(model, optimizer, metrics, Path(output_dir) / f"chk_{epoch}.pth")
+        if epoch % 5 == 0:
             print(
                 f"{epoch}: Test loss {metrics.test_losses[-1]:.4f}\t f1: {metrics.test_f1s[-1]:.3f} \t "
                 f"Train loss: {metrics.train_losses[-1]:.3f}\t f1: {metrics.train_f1s[-1]:.3f}"
             )
-
-    save_model(model, optimizer, metrics, Path(output_dir) / f"chk_{epoch}.pth")
 
     return model, metrics
 
