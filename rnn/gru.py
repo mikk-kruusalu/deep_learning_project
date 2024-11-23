@@ -38,7 +38,7 @@ class GRUnit(nn.Module):
 
 
 class GRU(nn.Module):
-    def __init__(self, nhidden=128, nfeatures=6, nclasses=6, dropout=0.5):
+    def __init__(self, nhidden=128, nfeatures=2, nclasses=6, dropout=0.5):
         super(GRU, self).__init__()
 
         self.nhidden = nhidden
@@ -56,6 +56,9 @@ class GRU(nn.Module):
 
     def forward(self, x):
         # x: [batches, sequence, features]
+        acc = torch.norm(x[:, :, :3], dim=-1)
+        gyro = torch.norm(x[:, :, 3:], dim=-1)
+        x = torch.stack((acc, gyro), dim=-1)
 
         H = torch.zeros((x.shape[0], self.nhidden), device=x.device)
         for seq in x.permute(1, 0, 2):
