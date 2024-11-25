@@ -8,3 +8,5 @@ wandb
 UCI\ HAR\ Dataset*
 __MACOSX*
 build
+ogbl_ddi
+!**/figures/*
