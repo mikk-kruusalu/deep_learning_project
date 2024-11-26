@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import MessagePassing, global_mean_pool
+from torch_geometric.nn import MessagePassing
 from torch_geometric.utils import degree, scatter
 
 
@@ -57,11 +57,12 @@ class EnzymesGNN(nn.Module):
         )
 
     def forward(self, graph):
+        x = graph.x
 
         for _ in range(self.nlayers):
-            x = self.gcn(graph.x, graph.edge_index)
+            x = x + self.gcn(x, graph.edge_index)
 
-        x = global_mean_pool(x, graph.batch)
+        x = scatter(x, graph.batch, reduce="sum")
 
         out = self.classifier(x)
 
@@ -77,8 +78,9 @@ if __name__ == "__main__":
     train_loader, test_loader = get_dataloaders(train_data, test_data, batch_size=64)
 
     model = EnzymesGNN()
-    for graph, label in train_loader:
-        print(graph)
-        print(model(graph).shape)
-        print(label.shape)
-        break
+    for i in range(60):
+        for graph, label in train_loader:
+            print(graph)
+            print(model(graph).shape)
+            print(label.shape)
+            # break

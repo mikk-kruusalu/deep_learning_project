@@ -1,6 +1,7 @@
 from torch_geometric.datasets import TUDataset
 from torch_geometric.loader import DataLoader
-from torch.utils.data import random_split, Dataset
+from torch.utils.data import random_split, Dataset, Subset
+import torch
 
 
 class EnzymeDataset(Dataset):
@@ -18,6 +19,15 @@ def load_data(root_path="gnn/dataset"):
     dataset = EnzymeDataset(root_path)
 
     train_data, test_data = random_split(dataset, [0.85, 0.15])
+
+    bad_id = -1
+    for i, (data, y) in enumerate(train_data):
+        if data.x.shape[0] != data.edge_index.max().item() + 1:
+            bad_id = i
+    if bad_id != -1:
+        good_ids = torch.cat((torch.arange(0, bad_id), torch.arange(bad_id + 1, len(train_data))))
+        train_data = Subset(train_data, good_ids)
+
     train_data.classes = list(range(6))
     test_data.classes = list(range(6))
 
@@ -33,6 +43,17 @@ def get_dataloaders(train_data, test_data, batch_size):
 
 if __name__ == "__main__":
     train_data, test_data = load_data()
+
+    for i, (data, y) in enumerate(train_data):
+        if data.x is None:
+            print("Tyhi!!")
+            print(i)
+            print(data)
+
+        if data.x.shape[0] != data.edge_index.max().item() + 1:
+            print(f"{i}: x ja edge mismatch")
+            print(data.x.shape)
+            print(data.edge_index.max())
 
     print(train_data[0])
     print(len(train_data))
