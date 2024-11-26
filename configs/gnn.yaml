@@ -1,0 +1,14 @@
+exp_name: gnn_enzymes_skip
+device: cpu
+model: gnn_enzymes
+logger:
+  wandb: true
+  project: deep-learning-course-gnn
+hyperparams:
+  batch_size: 64
+  learning_rate: 2.0e-3
+  nepochs: 70
+  model:
+    nlayers: 3
+    attention_size: 16    # attention vector size
+    cls_hidden_dim: 32   # classifier hidden dimension

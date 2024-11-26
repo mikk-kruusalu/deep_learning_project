@@ -1,0 +1,9 @@
+exp_name: gnn_enzymes
+device: cpu
+model: gnn_enzymes
+logger:
+  wandb: false
+hyperparams:
+  batch_size: 64
+  learning_rate: 5.0e-4
+  nepochs: 1

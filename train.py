@@ -3,12 +3,11 @@ from pathlib import Path
 from dataclasses import dataclass, field, asdict
 import torch
 import yaml
-from torch.utils.data import DataLoader
 from sklearn.metrics import f1_score
 
 from cnn import SimpleCNN, UnetTransfer
 from rnn import GRU, StackedLSTM, SentimentTransfer
-
+from gnn import EnzymesGNN
 
 models = {
     "simplecnn": SimpleCNN,
@@ -16,6 +15,7 @@ models = {
     "gru": GRU,
     "stacked_lstm": StackedLSTM,
     "sentiment_transfer": SentimentTransfer,
+    "gnn_enzymes": EnzymesGNN,
 }
 
 
@@ -166,13 +166,14 @@ if __name__ == "__main__":
         init_run(config)
 
     if config["model"] in ["unet", "simplecnn"]:
-        from cnn.dataset import load_data
+        from cnn.dataset import load_data, get_dataloaders
+    elif config["model"] in ["gnn_enzymes"]:
+        from gnn.dataset import load_data, get_dataloaders
     else:
-        from rnn.dataset import load_data
+        from rnn.dataset import load_data, get_dataloaders
 
     train_data, test_data = load_data()
-    train_loader = DataLoader(train_data, batch_size=hyperparams["batch_size"])
-    test_loader = DataLoader(test_data, batch_size=hyperparams["batch_size"])
+    train_loader, test_loader = get_dataloaders(train_data, test_data, batch_size=hyperparams["batch_size"])
 
     if "model" in hyperparams.keys():
         model = models[config["model"]](**hyperparams["model"])

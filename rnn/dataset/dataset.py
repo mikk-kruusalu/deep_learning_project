@@ -3,7 +3,7 @@ import zipfile
 
 import requests
 import numpy as np
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 import torch
 
 
@@ -93,6 +93,13 @@ def load_data(path="rnn/dataset") -> tuple[Dataset]:
     train_data = ActivityDataset(train_root)
 
     return train_data, test_data
+
+
+def get_dataloaders(train_data, test_data, batch_size):
+    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
+
+    return train_loader, test_loader
 
 
 if __name__ == "__main__":

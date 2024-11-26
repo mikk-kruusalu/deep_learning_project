@@ -2,7 +2,7 @@ import os
 import zipfile
 
 import requests
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from torchvision import datasets, transforms
 
 
@@ -58,3 +58,10 @@ def load_data(path="cnn/dataset", transform=None) -> tuple[Dataset]:
     train_data = datasets.ImageFolder(root=os.path.join(data_root, "Training"), transform=transform)
     test_data = datasets.ImageFolder(root=os.path.join(data_root, "Testing"), transform=transform)
     return train_data, test_data
+
+
+def get_dataloaders(train_data, test_data, batch_size):
+    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
+
+    return train_loader, test_loader
