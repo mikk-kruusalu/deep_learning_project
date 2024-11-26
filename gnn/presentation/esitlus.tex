@@ -32,7 +32,7 @@
 
 \begin{frame}{Graphs}
     \includegraphics[width=\textwidth]{image.png}
-    \let\thefootnote\relax\footnote{\url{https://distill.pub/2021/gnn-intro}}
+    \let\thefootnote\relax\footnote{\url{distill.pub/2021/gnn-intro}}
 
     \vspace{-0.7cm}
     \begin{itemize}
@@ -56,7 +56,7 @@
     Each node $u\in\mathcal{V}$ has features $\mathbf{h}_u\in\mathbb{R}^{m}$ \\
     Each edge $(u,v)\in\mathcal{E}$ has features $\mathbf{h}_{(u,v)}\in\mathbb{R}^{k}$
     \includegraphics[width=\textwidth]{adjacency.png}
-    \let\thefootnote\relax\footnote{\url{https://distill.pub/2021/gnn-intro}}
+    \let\thefootnote\relax\footnote{\url{distill.pub/2021/gnn-intro}}
 
     \vspace{-0.7cm}
     \begin{itemize}
@@ -147,12 +147,33 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}{Implementation}
+    The library PyTorch Geometric (PyG)
+    \begin{itemize}
+        \item graph datasets,
+        \item graph data batching,
+        \item message passing,
+        \item many convienience functions
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+    \includegraphics[width=\textwidth]{mp_code.png}
+\end{frame}
+
+\begin{frame}[plain]
+    \includegraphics[width=\textwidth]{net_code.png}
+\end{frame}
+
 \begin{frame}
     W. L. Hamilton, \textit{Graph Represantation Learning}, Synthesis Lectures on Artificial Intelligence and Machine Learning, vol. 14, no. 3, 2020
 
-    \url{https://distill.pub/2021/gnn-intro}
+    \url{distill.pub/2021/gnn-intro}
 
-    \url{https://distill.pub/2021/understanding-gnns/}
+    \url{distill.pub/2021/understanding-gnns/}
+
+    \vfill
+    Code \url{github.com/mikk-kruusalu/deep_learning_project}
 \end{frame}
 
 \end{document}
