@@ -9,7 +9,7 @@ class GNNLayer(MessagePassing):
     def __init__(self, nnodefeatures, attention_size=64):
         super(GNNLayer, self).__init__()
 
-        self.linear = nn.Linear(nnodefeatures, nnodefeatures)
+        self.linear = nn.Linear(2 * nnodefeatures, nnodefeatures)
         self.attention_transform = nn.Linear(2 * nnodefeatures, attention_size, bias=False)
         self.attention_vector = nn.Parameter(torch.ones((attention_size, 1)), requires_grad=True)
 
@@ -30,26 +30,30 @@ class GNNLayer(MessagePassing):
         attention_norm = scatter(attention, edge_index[1], reduce="sum")
         attention = attention / attention_norm[edge_index[0]]
 
-        m = self.linear(x_j * attention) / norm.view(-1, 1)
+        m = x_j * attention / norm.view(-1, 1)
         return m
 
     def aggregate(self, message, index):
         # Aggregates messages from neighbors
         return scatter(message, index, reduce="sum")
 
-    def update(self, message):
+    def update(self, message, x):
         # Updates node embeddings
-        return F.selu(message)
+        cat = torch.cat((message, x), dim=-1)
+        return F.selu(self.linear(cat))
 
 
 class EnzymesGNN(nn.Module):
-    def __init__(self, nnodefeatures=3, nclasses=6, nlayers=3, attention_size=64, cls_hidden_dim=128):
+    def __init__(
+        self, nnodefeatures=3, nclasses=6, nlayers=3, attention_size=64, cls_hidden_dim=128, dropout=0.3
+    ):
         super(EnzymesGNN, self).__init__()
         self.nlayers = nlayers
 
         self.gcn = GNNLayer(nnodefeatures, attention_size=attention_size)
 
         self.classifier = nn.Sequential(
+            nn.Dropout(p=dropout),
             nn.Linear(nnodefeatures, cls_hidden_dim),
             nn.SELU(),
             nn.Linear(cls_hidden_dim, nclasses),
