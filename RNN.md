@@ -49,3 +49,8 @@ The confusion matrices of the best model confirm that it can only predict walkin
 | --- | --- |
 | ![](figures/gru_train_cm.png) | ![](figures/gru_test_cm.png) |
 
+# Transfer learning
+
+The file `rnn/sentiment_transfer.py` includes the model definition of a transfer learning model. The base model is a [HuggingFace model](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest) that is meant for text sentiment classification. The idea here is to encode our time series into embeddings instead of words. Thats why there is this learnable tokenizer layer defined. The original model is defined to classify into 3 classes, so we swap the last linear layer so that the output has 6 classes. The rest of the model is freezed and used as is.
+
+Unfortunately, due to time constraints and computational expense I could not run a meaningful training session on this model. The inference works and the training loop does one epoch in quite a long time with no errors.
