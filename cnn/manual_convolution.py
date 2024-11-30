@@ -103,5 +103,5 @@ if __name__ == "__main__":
         ax[2, i + 3].set_xlabel(f"{k}x{k}")
         ax[2, i + 6].set_xlabel(f"{k}x{k}")
 
-    plt.savefig("manual_convolution.png")
+    plt.savefig("figures/manual_convolution.png")
     plt.show()
