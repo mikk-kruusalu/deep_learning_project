@@ -48,3 +48,18 @@ The models performance is illustrated below with confusion matrices for the best
 | Train confusion matrix | Test confusion matrix |
 | --- | --- |
 | ![](figures/simplecnn8_train_cm.png) | ![](figures/simplecnn8_test_cm.png) |
+
+# Transfer learning
+
+I am using the U-Net model trained for brain scan segmentation, from [here](https://pytorch.org/hub/mateuszbuda_brain-segmentation-pytorch_unet/).
+
+The idea is to use the model's ability to encode the scan's information in the bottleneck layer. I will run the model until bottleneck and then train a classifier that uses this encoded information to classify the brain scan. The bottleneck layer is also trained to fine tune for features that are needed for this task. The model definition is in `cnn/unet_transfer.py`. The overview of trained models is show again below.
+![](figures/unet_models.png)
+
+The learning curves look much nicer for this model as the training and test loss are clearly more correlated. And the F1 score reaches 0.63 for the test set.
+![](figures/unet_learning_curves.png)
+
+The confusion matrices indicate also that the model was learning and the difference between test and train dataset is not as big. The model still struggles with the features of glioma_tumor and it predicts no_tumor the most.
+| Train confusion matrix | Test confusion matrix |
+| --- | --- |
+| ![](figures/unet_train_cm.png) | ![](figures/unet_test_cm.png) |
