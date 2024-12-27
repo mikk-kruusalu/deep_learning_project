@@ -1,11 +1,13 @@
 # CNN and RNN project
 
-This repository contains code for the course projects of Deep Learning in Taltech in autumn 2024. The CNN was trained on [Lightning AI](lightning.ai) free studio, which allows to use a GPU.
+This repository contains code for the course projects of Deep Learning in Taltech in autumn 2024, see also <https://github.com/mikk-kruusalu/deep_learning_project2>. The CNN was trained on [Lightning AI](lightning.ai) free studio, which allows to use a GPU.
 
 In order to use this code, one needs to create a `conda` environment with
+
 ```bash
 conda env create -f environment.yaml
 ```
+
 Notice that if your computer does not include a cuda installation, you need to replace `pytorch-cuda=11.8` with `cpuonly` in the enivronment.yaml file.
 Also, [Weights & Biases](wandb.ai) account is optional and one needs to login on the command line with `wandb login` before running the code.
 
